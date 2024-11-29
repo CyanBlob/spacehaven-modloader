@@ -143,7 +143,8 @@ class Window(Frame):
         self.modDetailsName = Label(modDetailTopBar, font="TkDefaultFont 14 bold", anchor=NW)
         self.modDetailsName.pack(side=LEFT, padx=4, pady=4)
 
-        self.modEnableDisable = Button(modDetailTopBar, text="Enable", anchor=NE, command=self.toggle_current_mod)
+        # self.modEnableDisable = Button(modDetailTopBar, text="Enable", anchor=NE, command=self.toggle_current_mod)
+        self.modEnableDisable = Button(modDetailTopBar, text="启用", anchor=NE, command=self.toggle_current_mod)
         self.modEnableDisable.pack(side = RIGHT, padx=4, pady=4)
         modDetailTopBar.pack(side=TOP,fill=X,padx=4,pady=4)
 
@@ -168,14 +169,16 @@ class Window(Frame):
         buttonFrame = Frame(self)#.pack(fill = X, padx = 4, pady = 8)
 
         # launcher
-        self.launchButton_default_text = "LAUNCH!"
+        # self.launchButton_default_text = "LAUNCH!"
+        self.launchButton_default_text = "启动!"
         self.launchButton = Button(buttonFrame, text=self.launchButton_default_text, command=self.launch_wrapper, height = 2, font=font.Font(size = 14, weight = "bold") )
         self.launchButton.pack(fill=X, padx=4, pady=4 )
 
         #Frame(self, height=1, bg="grey").pack(fill=X, padx=4, pady=8)
         self.spacehavenPicker = Frame(buttonFrame)
         self.spacehavenPicker.pack(fill=X, padx=4, pady=4)
-        self.spacehavenBrowse = Button(self.spacehavenPicker, text="Find game...", command=self.browseForSpacehaven)
+        # self.spacehavenBrowse = Button(self.spacehavenPicker, text="Find game...", command=self.browseForSpacehaven)
+        self.spacehavenBrowse = Button(self.spacehavenPicker, text="查找游戏...", command=self.browseForSpacehaven)
         self.spacehavenBrowse.pack(side = LEFT, padx=8, pady=4)
 
         #self.spacehavenGameLabel = Label(self, text="Game Location :", anchor=NE)
@@ -189,22 +192,28 @@ class Window(Frame):
         self.spacehavenPicker.pack(fill=X, padx=0, pady=0)
         Frame(self, height=1, bg="grey").pack(fill=X, padx=4, pady=8)
 
-        self.quitButton = Button(buttonFrame, text="Quit", command=self.quit)
+        # self.quitButton = Button(buttonFrame, text="Quit", command=self.quit)
+        self.quitButton = Button(buttonFrame, text="退出", command=self.quit)
         self.quitButton.pack(side=RIGHT, expand = False, padx=8, pady=4)
         
-        self.annotateButton = Button(buttonFrame, text="Annotate XML", command = lambda: self.start_background_task(self.annotate, "Annotating"))
+        # self.annotateButton = Button(buttonFrame, text="Annotate XML", command = lambda: self.start_background_task(self.annotate, "Annotating"))
+        self.annotateButton = Button(buttonFrame, text="注释 XML", command = lambda: self.start_background_task(self.annotate, "Annotating"))
         self.annotateButton.pack(side=RIGHT, expand = False, padx=8, pady=4)
         
-        self.extractButton = Button(buttonFrame, text="Extract game assets", command = lambda: self.start_background_task(self.extract_assets, "Extracting"))
+        # self.extractButton = Button(buttonFrame, text="Extract game assets", command = lambda: self.start_background_task(self.extract_assets, "Extracting"))
+        self.extractButton = Button(buttonFrame, text="提取游戏资产", command = lambda: self.start_background_task(self.extract_assets, "Extracting"))
         self.extractButton.pack(side=RIGHT, expand = False, padx=8, pady=4)
         
-        self.modListOpenFolder = Button(buttonFrame, text="Open Mods Folder", command=self.openModFolder)
+        # self.modListOpenFolder = Button(buttonFrame, text="Open Mods Folder", command=self.openModFolder)
+        self.modListOpenFolder = Button(buttonFrame, text="打开Mods文件夹", command=self.openModFolder)
         self.modListOpenFolder.pack(side = RIGHT, expand = False, padx=8, pady=4)
 
-        self.modListRefresh = Button(buttonFrame, text="Refresh Mods", command=self.refreshModList)
+        # self.modListRefresh = Button(buttonFrame, text="Refresh Mods", command=self.refreshModList)
+        self.modListRefresh = Button(buttonFrame, text="刷新Mod", command=self.refreshModList)
         self.modListRefresh.pack(side = RIGHT, expand = False, padx=8, pady=4)
         
-        self.quickLaunchClear = Button(buttonFrame, text="Clear Quicklaunch file", command=self.clear_quick_launch)
+        # self.quickLaunchClear = Button(buttonFrame, text="Clear Quicklaunch file", command=self.clear_quick_launch)
+        self.quickLaunchClear = Button(buttonFrame, text="清理Quicklaunch文件", command=self.clear_quick_launch)
         self.quickLaunchClear.pack(side = RIGHT, expand = False, padx=8, pady=4)
 
         buttonFrame.pack(fill = X, padx = 4, pady = 8)
@@ -487,10 +496,13 @@ class Window(Frame):
         
         title = mod.title()
         if mod.enabled:
-            command_label = "Disable"
+            # command_label = "Disable"
+            command_label = "禁用"
         else:
-            command_label = "Enable"
-            title += " [DISABLED]"
+            # command_label = "Enable"
+            command_label = "启用"
+            # title += " [DISABLED]"
+            title += " [禁用]"
         
         self.modDetailsName.config(text = title)
         self.modEnableDisable.config(text = command_label)
@@ -604,13 +616,16 @@ class Window(Frame):
     
     def check_quick_launch(self):
         if not self.mods_enabled():
-            self.launchButton_default_text = "LAUNCH ORIGINAL GAME"
+            # self.launchButton_default_text = "LAUNCH ORIGINAL GAME"
+            self.launchButton_default_text = "启动原版游戏"
             self.quickLaunchClear.config(state = DISABLED)
         elif self.quick_launch_available():
-            self.launchButton_default_text = "QUICKLAUNCH!"
+            # self.launchButton_default_text = "QUICKLAUNCH!"
+            self.launchButton_default_text = "快速启动!"
             self.quickLaunchClear.config(state = NORMAL)
         else:
-            self.launchButton_default_text = "LAUNCH!"
+            # self.launchButton_default_text = "LAUNCH!"
+            self.launchButton_default_text = "启动游戏!"
             self.quickLaunchClear.config(state = DISABLED)
         self.launchButton.config(text = self.launchButton_default_text)
     
@@ -624,13 +639,16 @@ class Window(Frame):
     def launch_wrapper(self):
         if not self.mods_enabled():
             task = self.launch_vanilla
-            message = "Launching original game"
+            # message = "Launching original game"
+            message = "正在启动原版游戏"
         elif self.quick_launch_available():
             task = self.quick_launch
-            message = "Quicklaunching"
+            # message = "Quicklaunching"
+            message = "正在快速启动中"
         else:
             task = self.patchAndLaunch
-            message = "Launching"
+            # message = "Launching"
+            message = "正在启动"
         
         self.start_background_task(task, message)
     

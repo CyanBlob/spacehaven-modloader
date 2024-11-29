@@ -14,6 +14,14 @@ from .explode import Texture
 from .library import PATCHABLE_CIM_FILES, PATCHABLE_XML_FILES
 from .patch import doPatches
 
+entity_map = {
+    b"&amp;": b"&",
+    b"&lt;": b"<",
+    b"&gt;": b">",
+    b"&quot;": b"\"",
+    b"&apos;": b"'",
+    b"&nbsp;": b" "
+}
 
 def _detect_textures(coreLibrary, modLibrary, mod):
     textures_path = os.path.join(mod, 'textures')
@@ -240,7 +248,7 @@ def buildLibrary(location: str, mod: str):
             if target not in location_library:  location_library[target] = []
 
             ui.log.log("    {} <= {}".format(target, mod_file))
-            with open(_mod_path(mod_file)) as f:
+            with open(_mod_path(mod_file), "rb") as f:
                 location_library[target].append(lxml.etree.parse(f, parser=lxml.etree.XMLParser(remove_comments=True)))
 
         mod_file = _mod_path(target)
@@ -291,7 +299,10 @@ def mods(corePath, activeMods, modPaths):
     # Write out the new base library
     for filename in PATCHABLE_XML_FILES:
         with open(_core_path(filename), "wb") as f:
-            f.write(lxml.etree.tostring(coreLibrary[filename], pretty_print=True, encoding="UTF-8"))
+            xml_bytes:str = lxml.etree.tostring(coreLibrary[filename], pretty_print=True, encoding="UTF-8")
+            for entity, replacement in entity_map.items():
+                xml_bytes = xml_bytes.replace(entity, replacement)
+            f.write(xml_bytes)
 
     ui.log.updateLaunchState("Packing textures")
     # add or overwrite textures from mods. This is done after all the XML has been merged into the core "textures" file
